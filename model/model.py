@@ -132,8 +132,26 @@ class Attention(nn.Module):
             repeat_kv(xv, self.n_rep).transpose(1, 2),
         )
 
-        # Implement attention
-        # Write your code here
+        # Compute attention scores
+        attn_scores = torch.matmul(xq, xk.transpose(-2, -1))  # (bsz, n_heads, seq_len, seq_len)
+        attn_scores = attn_scores / (self.head_dim ** 0.5)  # Scale by sqrt(d_k)
+
+        # Apply the causal mask to the attention scores (block future positions)
+        attn_scores = attn_scores + self.mask[:, :, :seq_len, :seq_len]
+
+        # Softmax to get attention weights
+        attn_weights = F.softmax(attn_scores, dim=-1)
+
+        # Apply dropout to attention weights
+        attn_weights = self.attn_dropout(attn_weights)
+
+        # Compute attention output
+        attn_output = torch.matmul(attn_weights, xv)  # (bsz, n_heads, seq_len, head_dim)
+        attn_output = attn_output.transpose(1, 2).contiguous().view(bsz, seq_len, -1)
+
+        # Final output linear transformation
+        output = self.wo(attn_output)
+        output = self.resid_dropout(output)
 
         return output, past_kv
 

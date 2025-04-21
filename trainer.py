@@ -42,13 +42,10 @@ def dpo_loss(ref_probs: torch.Tensor, probs: torch.Tensor, mask: torch.Tensor, b
     chosen_probs = probs[: batch_size // 2]
     reject_probs = probs[batch_size // 2 :]
 
-    # Calculate the chosen vs rejected probabilities (positive vs negative)
-    chosen_loss = F.binary_cross_entropy_with_logits(chosen_probs, torch.ones_like(chosen_probs))
-    reject_loss = F.binary_cross_entropy_with_logits(reject_probs, torch.zeros_like(reject_probs))
-
-    # DPO loss is a weighted combination of chosen and rejected losses
-    loss = chosen_loss + beta * reject_loss
-
+    # Calculate loss
+    differences = (chosen_probs - chosen_ref_probs) - (reject_probs - reject_ref_probs)
+    loss = -F.logsigmoid(beta * differences)
+    
     return loss.mean()
 
 
