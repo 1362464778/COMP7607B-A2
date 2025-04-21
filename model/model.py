@@ -17,15 +17,20 @@ class RMSNorm(torch.nn.Module):
         """
         Apply RMS normalization to the input tensor x.
 
-        Ref: [RMSNorm](https://arxiv.org/abs/1910.07467)
-
         Args:
             x: Input tensor of shape (batch_size, sequence_length, hidden_dim)
 
         Returns:
             torch.Tensor: Normalized tensor of the same shape as x
         """
-        # Write your code here
+        # Calculate the root mean square (RMS) of x across the last dimension (hidden_dim)
+        rms = torch.sqrt((x ** 2).mean(dim=-1, keepdim=True) + self.eps)
+        
+        # Normalize x by dividing by the RMS
+        normalized_x = x / rms
+        
+        # Apply the learnable scaling factor
+        return normalized_x * self.weight
 
 
 def precompute_pos_cis(dim: int, end: int = int(32 * 1024), theta: float = 1e6):

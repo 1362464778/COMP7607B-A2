@@ -2,6 +2,9 @@ import torch
 from torch import nn
 
 
+import torch
+from torch import nn
+
 class LoRA(nn.Module):
     """Low-Rank Adaptation module for fine-tuning neural networks."""
 
@@ -15,13 +18,16 @@ class LoRA(nn.Module):
             rank: Rank of the low-rank approximation
         """
         super().__init__()
+        
         # Define the low-rank matrices A and B
-        # And initialize A with normal distribution with mean 0 and std 0.02, and B with zeros
-        # Write your code here
+        self.A = nn.Parameter(torch.randn(in_features, rank) * 0.02)  # A is initialized with normal distribution
+        self.B = nn.Parameter(torch.zeros(rank, out_features))        # B is initialized with zeros
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass through the LoRA module."""
-        # Write your code here
+        # Perform low-rank adaptation
+        return torch.matmul(torch.matmul(x, self.A), self.B)
+
 
 
 def apply_lora(model: nn.Module, rank: int = 16):
