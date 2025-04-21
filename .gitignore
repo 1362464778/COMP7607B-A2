@@ -176,3 +176,5 @@ cython_debug/
 out/
 data/
 .vscode/
+.DS_Store
+clean.py
