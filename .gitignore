@@ -174,7 +174,6 @@ cython_debug/
 .pypirc
 
 out/
-data/
 .vscode/
 .DS_Store
-clean.py
+COMP7607B-A2.code-workspace

@@ -1,7 +1,7 @@
 from huggingface_hub import HfApi
 
-TOKEN = "hf_XXXXXX"
-REPO_ID = "hkukend/3030XXXXX-COMP7607-data"
+TOKEN = "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"
+REPO_ID = "DeepBlueEcho/3036382727-COMP7607-data"
 
 
 api = HfApi(token=TOKEN)

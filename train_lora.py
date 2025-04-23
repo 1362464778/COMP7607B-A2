@@ -49,7 +49,7 @@ def main():
     set_random_seeds()
     args = parse_args()
     trainer = LoraTrainer(args)
-    trainer.run()
+    # trainer.run()
     trainer.eval()
 
 
